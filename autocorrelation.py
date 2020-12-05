@@ -8,8 +8,9 @@ def cosine_squared_window(n_points):
     return window
 
 
-def _single_fft_autocorrelation(data):
-    data = (data - np.mean(data)) / np.std(data)
+def _single_fft_autocorrelation(data, normalize=False):
+    if normalize:
+        data = (data - np.mean(data)) / np.std(data)
     n_points = data.shape[0]
     fft_forward = np.fft.fft(data, n=2 * n_points)
     fft_autocorr = fft_forward * np.conjugate(fft_forward)
