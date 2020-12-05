@@ -1,23 +1,50 @@
 import numpy as np
 
-def closest_power_of_2(n):
-    return 2 ** int(np.ceil(np.log(n) / np.log(2)))
 
-def autocorrelation_1d(data):
-    n = len(data)
-    X = np.zeros(2 * closest_power_of_2(n))
-    X[:n] = data
-    F = np.fft.fft(X)
-    result = np.fft.ifft(F * F.conj())[:n].real / (n - np.arange(n))
-    return result[:n]
+def cosine_squared_window(n_points):
+    points = np.arange(n_points)
+    window = np.cos(np.pi * points / (n_points - 1) / 2) ** 2
+    return window
 
-def autocorrelation(X):
-    X = np.asarray(X)
-    if X.ndim==1:
-        return autocorrelation_1d(X)
-    
-    else:
-        result = autocorrelation_1d(X[:,0])
-        for j in range(1, X.shape[1]):
-            result += autocorrelation_1d(X[:,j])
-        return result
+
+def _single_fft_autocorrelation(data):
+    data = (data - np.mean(data)) / np.std(data)
+    n_points = data.shape[0]
+    fft_forward = np.fft.fft(data, n=2 * n_points)
+    fft_autocorr = fft_forward * np.conjugate(fft_forward)
+    fft_backward = np.fft.ifft(fft_autocorr)[:n_points] / n_points
+    return np.real(fft_backward)
+
+
+def fft_autocorrelation(data):
+    orig_shape = data.shape
+    reshaped_data = data.reshape((orig_shape[0], -1))
+    autocorrelations = np.zeros((reshaped_data.shape[1], data.shape[0]))
+    for i in range(reshaped_data.shape[1]):
+        autocorrelations[i, :] = _single_fft_autocorrelation(reshaped_data[:, i])
+    return autocorrelations.reshape((*orig_shape[1:], -1))
+
+
+def velocity_autocorrelation(velocities):
+    autocorrelation = fft_autocorrelation(velocities)
+    autocorrelation = np.sum(autocorrelation, axis=1)
+    autocorrelation = np.mean(autocorrelation, axis=0)
+    return autocorrelation
+
+
+def compute_spectra(data, timestep, resolution=None):
+    if resolution:
+        data = data[: resolution]
+
+    orig_shape = data.shape[0]
+    data *= cosine_squared_window(orig_shape)
+
+    data_padded = np.zeros(4 * orig_shape)
+    data_padded[:orig_shape] = data
+
+    data_mirrored = np.hstack((np.flipud(data_padded), data_padded))
+
+    n_fourier = 8 * orig_shape
+    intensities = np.abs(timestep * np.fft.fft(data_mirrored, n=n_fourier)[: n_fourier // 2])
+    frequencies = np.arange(n_fourier // 2) / (n_fourier * timestep)
+    return frequencies, intensities
