@@ -1,4 +1,5 @@
 import numpy as np
+from ase import units
 
 
 def cosine_squared_window(n_points):
@@ -32,7 +33,7 @@ def velocity_autocorrelation(velocities):
     return autocorrelation
 
 
-def compute_spectra(data, timestep, resolution=None):
+def compute_spectra(data, timestep, resolution=None, frequency_units='THz'):
     if resolution:
         data = data[: resolution]
 
@@ -47,6 +48,13 @@ def compute_spectra(data, timestep, resolution=None):
     n_fourier = 8 * orig_shape
     intensities = np.abs(timestep * np.fft.fft(data_mirrored, n=n_fourier)[: n_fourier // 2])
     frequencies = np.arange(n_fourier // 2) / (n_fourier * timestep)
+
+    if frequency_units:
+        if frequency_units.lower() == 'thz':
+            frequencies *= 1e3 * units.fs
+        else:
+            raise ValueError()
+
     return frequencies, intensities
 
 
