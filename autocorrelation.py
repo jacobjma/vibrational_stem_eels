@@ -48,3 +48,9 @@ def compute_spectra(data, timestep, resolution=None):
     intensities = np.abs(timestep * np.fft.fft(data_mirrored, n=n_fourier)[: n_fourier // 2])
     frequencies = np.arange(n_fourier // 2) / (n_fourier * timestep)
     return frequencies, intensities
+
+
+def pdos_spectrum(velocities, timestep, resolution=None):
+    data = velocity_autocorrelation(velocities)
+    frequencies, intensities = compute_spectra(data, timestep=timestep, resolution=resolution)
+    return frequencies, intensities
