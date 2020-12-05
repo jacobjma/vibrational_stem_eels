@@ -1,0 +1,27 @@
+# Generated at http://cosmo-epfl.github.io/gle4md 
+# Please cite: 
+# M. Ceriotti, G. Bussi and M. Parrinello, J. Chem. Theory Comput. 6, 1170 (2010) 
+# M. Ceriotti and M. Parrinello, Proc. Comp. Sci. 1, 1601 (2010) 
+# Delta thermostat: selective normal-modes excitations. Normal modes close to 
+# the peak frequency will be thermalized at a high temperature, and the others will 
+# be kept frozen. 
+# The parameters were picked from 
+# libroot+delta/peak-gle_pset.a, 
+# libroot+delta/peak-gle_pset.c 
+# and shifted so that have a peak centered on 
+# wP=gle_freq THz 
+# with peak temperature 
+# TP=gle_temp K 
+# Raw matrix format. 
+# A MATRIX: (picoseconds^-1)
+   2.433550096376e-1    3.420406808136e-1   -3.177822366522e-1    1.637808810936e-1   -2.307687222055e+0 
+  -3.374032277401e-1    2.948245289052e-4    6.189101635576e+1   -1.075844238788e+1    4.569700027979e+0 
+   3.177811296806e-1   -6.189101635576e+1    1.285811826667e-9   -1.220240792571e-1    8.991771610723e-1 
+  -4.989286121271e-2    1.075844238788e+1    1.220240792571e-1    6.324762294180e+0    9.277625892822e+0 
+  -5.822455744682e+0   -4.569700027979e+0   -8.991771610723e-1   -9.277625892822e+0    1.686931524615e+2 
+# C MATRIX: (K)
+   2.357750507100e-2   -2.558715531600e+0   -2.009568790800e+0    3.947611926000e-1   -7.201474281000e-2 
+  -2.558715531600e+0    4.569308922000e+2   -1.954176985500e+0   -7.175101350000e+0    1.133319408600e+1 
+  -2.009568790800e+0   -1.954176985500e+0    4.419878820000e+2   -7.782825255000e+1    1.687591691400e+0 
+   3.947611926000e-1   -7.175101350000e+0   -7.782825255000e+1    1.447355048700e+1   -5.203105509000e-1 
+  -7.201474281000e-2    1.133319408600e+1    1.687591691400e+0   -5.203105509000e-1    3.419857335000e-1 
