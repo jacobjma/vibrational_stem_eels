@@ -91,7 +91,6 @@ class DeltaThermostat(GLEThermostat):
         A = read_gle4md_file(gle4md_file, start='# A MATRIX:', stop='# C MATRIX:')
         C = read_gle4md_file(gle4md_file, start='# C MATRIX:')
         A = A / 10 * peak_frequency
-        C = C / 300 * temperature
-
+        C = C / 300 * units.kB * temperature
         super().__init__(atoms, A=A, C=C, timestep=timestep, trajectory=trajectory, logfile=logfile,
                          loginterval=loginterval, append_trajectory=append_trajectory)
