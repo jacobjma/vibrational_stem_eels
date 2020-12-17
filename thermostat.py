@@ -96,12 +96,12 @@ class GLEThermostat(MolecularDynamics):
         p = self._apply_thermostat(atoms.get_momenta())
         p = p + 0.5 * self.dt * atoms.get_forces()
 
-        if self.fix_cm:
+        if self.fixcm:
             old_cm = atoms.get_center_of_mass()
 
         atoms.set_positions(atoms.get_positions() + self.dt * p / atoms.get_masses()[:, None])
 
-        if self.fix_cm:
+        if self.fixcm:
             new_cm = atoms.get_center_of_mass()
             d = old_cm - new_cm
             atoms.set_positions(atoms.get_positions() + d)
